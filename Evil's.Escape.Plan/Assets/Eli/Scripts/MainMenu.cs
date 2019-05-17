@@ -26,15 +26,20 @@ public class MainMenu : MonoBehaviour
     private Button newGame;
     [SerializeField]
     private Button no;
+    private bool statsOpen = false;
     private bool quitOpen;
     private bool quitAxisInUse;
     private bool axisInUse;
-
+    
+    public CanvasGroup stats;
     [SerializeField]
     private Animator anim;
 
+    public StatsMenu statsMenu;
+
     void Start()
     {
+        stats.alpha = 0;
         isQuitting = true;
         popup.SetActive(false);
         settingsPopup.SetActive(false);
@@ -43,23 +48,26 @@ public class MainMenu : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetAxisRaw("Vertical") != 0)
+        if (!statsOpen)
         {
-            if (axisInUse == false)
+            if (Input.GetAxisRaw("Vertical") != 0)
             {
-                newGame.Select();
-                axisInUse = true;
-            }
-        }
-
-        if (quitOpen == true)
-        {
-            if (Input.GetAxisRaw("Horizontal") != 0)
-            {
-                if (quitAxisInUse == false)
+                if (axisInUse == false)
                 {
-                    no.Select();
-                    quitAxisInUse = true;
+                    newGame.Select();
+                    axisInUse = true;
+                }
+            }
+
+            if (quitOpen == true)
+            {
+                if (Input.GetAxisRaw("Horizontal") != 0)
+                {
+                    if (quitAxisInUse == false)
+                    {
+                        no.Select();
+                        quitAxisInUse = true;
+                    }
                 }
             }
         }
@@ -111,10 +119,21 @@ public class MainMenu : MonoBehaviour
         }
     }
 
+    public void assignStats()
+    {
+        FindObjectOfType<AudioManager>().Play("Button Click");
+        statsOpen = true;
+        stats.alpha = 1;
+    }
+
     public void begin()
     {
-        FindObjectOfType<AudioManager>().Play("New Game");
-        Invoke("Loading", 1f);
+        if (statsMenu.loadingReady)
+        {
+            stats.alpha = 0;
+            FindObjectOfType<AudioManager>().Play("New Game");
+            Invoke("Loading", 1f);
+        }
     }
 
     private void Loading()

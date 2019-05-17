@@ -1,26 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
-
-public enum Values
-{
-    Column01,
-    Column02,
-    Column03
-};
-
-[System.Serializable]
-public class StatsOperations
-{
-    [Tooltip("Stats in Order")]
-    public Values statNum;
-}
 
 public class StatsMenu : MonoBehaviour
 {
-    public StatsOperations[] statsOperations;
-
-    [SerializeField]
-    private StatsOperations _so = new StatsOperations();
+    public Orc[] orcs;
 
     [SerializeField]
     private Button orcOne;
@@ -29,128 +13,176 @@ public class StatsMenu : MonoBehaviour
     [SerializeField]
     private Button orcThree;
 
-    public GameObject popup;
+    private int currentOrc;
+    public StatsManager statsManager;
 
-    private bool selectedStat = false;
-    private string currentTag;
+    [HideInInspector]
+    public bool nextPopup;
+    [HideInInspector]
+    public bool previousPopup;
+    public Text nextText;
+    [SerializeField]
+    private Button previousButton;
+    public Text previousText;
 
-    [SerializeField]
-    private GameObject[] statsValues;
-    // Search via Tag Attack, Defence, Magic. Then via Name 1, 2, 3
-    [SerializeField]
-    private Image currentButton;
+    [HideInInspector]
+    public int previousAttack;
+    [HideInInspector]
+    public int previousDefence;
+    [HideInInspector]
+    public int previousMagic;
+
+    private ColorBlock cb;
+    private Color selected;
+    private Color notSelected;
+
+    [HideInInspector]
+    public bool loadingReady = false;
 
     void Start()
     {
-        currentTag = currentButton.tag;
+        currentOrc = 1;
+        selected = new Color32(255, 255, 255, 255);
+        notSelected = new Color32(255, 255, 255, 65);
+
+        cb = orcOne.GetComponent<Button>().colors;
+        cb.disabledColor = selected;
+        orcOne.GetComponent<Button>().colors = cb;
     }
 
-    public void ButtonClick()
+    void Update()
     {
-        switch (_so.statNum)
+        if (currentOrc == 1)
         {
-            case Values.Column01:
-                if (selectedStat == true)
-                {
-                    currentButton.color = new Color32(255, 255, 255, 150);
-                    foreach (GameObject button in statsValues)
-                    {
-                        if (button.name == "4")
-                        {
-                            button.GetComponent<Button>().interactable = false;
-                        }
-                    }
-                    currentButton.tag = currentTag;
-                    selectedStat = false;
-                }
-                else if (selectedStat == false)
-                {
-                    currentButton.color = new Color32(248, 128, 0, 255);
-                    foreach (GameObject button in statsValues)
-                    {
-                        if (button.name == "4")
-                        {
-                            button.GetComponent<Button>().interactable = true;
-                        }
-                    }
-                    currentButton.tag = "Selected";
-                    selectedStat = true;
-                }
-                break;
-            case Values.Column02:
-                if (selectedStat == true)
-                {
-                    currentButton.color = new Color32(255, 255, 255, 150);
-                    foreach (GameObject button in statsValues)
-                    {
-                        if (button.name == "5")
-                        {
-                            button.GetComponent<Button>().interactable = false;
-                        }
-                    }
-                    currentButton.tag = currentTag;
-                    selectedStat = false;
-                }
-                else if (selectedStat == false)
-                {
-                    currentButton.color = new Color32(248, 128, 0, 255);
-                    foreach (GameObject button in statsValues)
-                    {
-                        if (button.name == "5")
-                        {
-                            button.GetComponent<Button>().interactable = true;
-                        }
-                    }
-                    currentButton.tag = "Selected";
-                    selectedStat = true;
-                }
-                break;
-            case Values.Column03:
-                if (selectedStat == true)
-                {
-                    currentButton.color = new Color32(255, 255, 255, 150);
-                    currentButton.tag = currentTag;
-                    selectedStat = false;
-                }
-                else if (selectedStat == false)
-                {
-                    currentButton.color = new Color32(248, 128, 0, 255);
-                    currentButton.tag = "Selected";
-                    selectedStat = true;
-                }
-                break;
+            OrcSelected(orcOne);
+            previousButton.interactable = false;
+            previousText.color = new Color32(125, 48, 44, 128);
+        }
+        else
+        {
+            OrcNotSelected(orcTwo);
+            OrcNotSelected(orcThree);
+            previousButton.interactable = true;
+            previousText.color = new Color32(125, 48, 44, 255);
+        }
+
+        if (currentOrc == 2)
+        {
+            OrcSelected(orcTwo);
+        }
+        else
+        {
+            OrcNotSelected(orcOne);
+            OrcNotSelected(orcThree);
+        }
+
+        if (currentOrc == 3)
+        {
+            OrcSelected(orcThree);
+            nextText.text = "Confirm";
+        }
+        else
+        {
+            OrcNotSelected(orcOne);
+            OrcNotSelected(orcTwo);
+            nextText.text = "Next";
         }
     }
 
-    public void orcOneStats()
+    public void StatsRecorder()
     {
-        orcTwo.enabled = true;
-        orcThree.enabled = true;
+        if (nextText.text.Equals("Confirm"))
+        {
+            loadingReady = true;
+        }
+        else
+        {
+            FindObjectOfType<AudioManager>().Play("Button Click");
+            Orc orcCurrent = orcs.First(o => o.orcNum == currentOrc);
+            Orc orcTarget = orcs.First(o => o.orcNum == currentOrc + 1);
+            if (currentOrc <= 3)
+            {
+                orcCurrent.orcName = statsManager.nameInput.text;
+                orcCurrent.orcAttack = statsManager.attackStats.Count();
+                orcCurrent.orcDefence = statsManager.defenceStats.Count();
+                orcCurrent.orcMagic = statsManager.magicStats.Count();
 
-        popup.SetActive(true);
+                if ((currentOrc < 3) && (previousPopup == false))
+                {
+                    currentOrc++;
+                    Debug.Log("Orc is " + currentOrc);
+                    nextPopup = true;
+                }
+                else
+                {
+                    currentOrc++;
+                    Debug.Log("Orc is " + currentOrc);
+                }
+            }
 
-        orcOne.enabled = false;
+            if (!orcTarget.orcName.Equals(""))
+            {
+                statsManager.nameInput.text = orcTarget.orcName;
+                previousAttack = orcTarget.orcAttack + 2;
+                previousDefence = orcTarget.orcDefence + 2;
+                previousMagic = orcTarget.orcMagic + 2;
+
+                previousPopup = true;
+            }
+            else
+            {
+                if ((orcTarget.orcAttack != 0) || (orcTarget.orcDefence != 0) || (orcTarget.orcMagic != 0))
+                {
+                    statsManager.nameInput.text = "";
+                    previousAttack = orcTarget.orcAttack + 2;
+                    previousDefence = orcTarget.orcDefence + 2;
+                    previousMagic = orcTarget.orcMagic + 2;
+
+                    previousPopup = true;
+                }
+
+                statsManager.nameInput.text = "";
+            }
+        }
     }
 
-    public void orcTwoStats()
+    public void StatsPrevious()
     {
-        orcOne.enabled = true;
-        orcThree.enabled = true;
+        FindObjectOfType<AudioManager>().Play("Button Click");
+        Orc orcCurrent = orcs.First(o => o.orcNum == currentOrc);
+        Orc orcTarget = orcs.First(o => o.orcNum == currentOrc - 1);
+        if (currentOrc <= 3)
+        {
+            orcCurrent.orcName = statsManager.nameInput.text;
+            orcCurrent.orcAttack = statsManager.attackStats.Count();
+            orcCurrent.orcDefence = statsManager.defenceStats.Count();
+            orcCurrent.orcMagic = statsManager.magicStats.Count();
 
-        popup.SetActive(true);
+            statsManager.nameInput.text = orcTarget.orcName;
+            previousAttack = orcTarget.orcAttack + 2;
+            previousDefence = orcTarget.orcDefence + 2;
+            previousMagic = orcTarget.orcMagic + 2;
 
-        orcTwo.enabled = false;
+            if (currentOrc > 1)
+            {
+                currentOrc--;
+                Debug.Log("Orc is now " + currentOrc);
+                previousPopup = true;
+            }
+        }
     }
 
-    public void orcThreeStats()
+    public void OrcSelected(Button orc)
     {
-        orcOne.enabled = true;
-        orcTwo.enabled = true;
-
-        popup.SetActive(true);
-
-        orcThree.enabled = false;
+        cb = orc.GetComponent<Button>().colors;
+        cb.disabledColor = selected;
+        orc.GetComponent<Button>().colors = cb;
     }
 
-
+    public void OrcNotSelected(Button orc)
+    {
+        cb = orc.GetComponent<Button>().colors;
+        cb.disabledColor = notSelected;
+        orc.GetComponent<Button>().colors = cb;
+    }
 }

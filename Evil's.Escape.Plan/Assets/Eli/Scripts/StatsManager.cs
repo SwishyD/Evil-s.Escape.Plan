@@ -24,35 +24,232 @@ public class StatsManager : MonoBehaviour
     private int DefenseStart = 3;
     private int MagicStart = 6;
 
+    [HideInInspector]
+    public GameObject[] attackStats;
+    [HideInInspector]
+    public GameObject[] defenceStats;
+    [HideInInspector]
+    public GameObject[] magicStats;
+
+    public StatsMenu statsMenu;
+    private bool ready = false;
+    [SerializeField]
+    private Button nextButton;
+    public InputField nameInput;
+
     void Start()
     {
         orange = new Color32(248, 128, 0, 255);
         white = new Color32(255, 255, 255, 150);
         disabled = new Color32(200, 200, 200, 255);
-        working = new Color32(200, 200, 200, 150);
+        working = new Color32(200, 200, 200, 128);
     }
 
     void Update()
     {
         GameObject[] selected = allStats.Where(b => b.tag == "Selected").ToArray();
-        GameObject[] notSelectable = allStats.Where(b => b.tag == "Selectable").ToArray();
+        GameObject[] selectable = allStats.Where(b => b.tag == "Selectable").ToArray();
+        GameObject[] notSelectable = allStats.Where(b => b.tag == "Unselectable").ToArray();
+        attackStats = selected.Where(b => b.name.Contains("Attack")).ToArray();
+        defenceStats = selected.Where(b => b.name.Contains("Defence")).ToArray();
+        magicStats = selected.Where(b => b.name.Contains("Magic")).ToArray();
 
         stats = selected.Count();
         statsAvailableText.text = (statsAvailable - stats) + " Points Available!!";
 
         if (stats >= statsAvailable)
         {
-            foreach (GameObject button in notSelectable)
+            foreach (GameObject button in selectable)
             {
                 button.GetComponent<Button>().interactable = false;
             }
+            if (!nameInput.text.Equals(""))
+                ready = true;
+            else
+                ready = false;
         }
         else
         {
-            foreach (GameObject button in notSelectable)
+            foreach (GameObject button in selectable)
             {
                 button.GetComponent<Button>().interactable = true;
             }
+            ready = false;
+        }
+
+        if (!ready)
+        {
+            nextButton.interactable = false;
+            statsMenu.nextText.color = new Color32(125, 48, 44, 128);
+        }
+        else
+        {
+            nextButton.interactable = true;
+            statsMenu.nextText.color = new Color32(125, 48, 44, 255);
+        }
+
+        if (statsMenu.nextPopup)
+        {
+            foreach (GameObject button in selected)
+            {
+                buttonReset(button);
+            }
+            foreach (GameObject button in selectable)
+            {
+                buttonReset(button);
+            }
+            foreach (GameObject button in notSelectable)
+            {
+                buttonReset(button);
+            }
+
+            statsMenu.nextPopup = false;
+        }
+
+        if (statsMenu.previousPopup)
+        {
+            var attack = statsMenu.previousAttack;
+            var defence = statsMenu.previousDefence;
+            var magic = statsMenu.previousMagic;
+
+            foreach (GameObject button in allStats)
+            {
+                button.GetComponent<Image>().color = white;
+                cb = button.GetComponent<Button>().colors;
+                cb.disabledColor = working;
+                cb.highlightedColor = orange;
+                button.GetComponent<Button>().colors = cb;
+
+                button.tag = "Unselectable";
+                button.GetComponent<Button>().interactable = false;
+
+                var value = button.name;
+                var split = value.Split(' ');
+                var buttonType = split[0];
+                var buttonValue = int.Parse(split[1]);
+
+                if (buttonType == "Attack")
+                {
+                    if (buttonValue <= attack)
+                    {
+                        reactivateButton(button);
+                    }
+                    else if (buttonValue == attack + 1)
+                    {
+                        button.tag = "Selectable";
+                        button.GetComponent<Button>().interactable = false;
+                    }
+
+                    if (attack == 4)
+                    {
+                        if (buttonValue == 3)
+                        {
+                            reactivateColor(button);
+                        }
+                    }
+                    else if (attack == 5)
+                    {
+                        if (buttonValue <= 4)
+                        {
+                            reactivateColor(button);
+                        }
+                    }
+                }
+                if (buttonType == "Defence")
+                {
+                    if (buttonValue <= defence)
+                    {
+                        reactivateButton(button);
+                    }
+                    else if (buttonValue == defence + 1)
+                    {
+                        button.tag = "Selectable";
+                        button.GetComponent<Button>().interactable = false;
+                    }
+
+                    if (defence == 4)
+                    {
+                        if (buttonValue == 3)
+                        {
+                            reactivateColor(button);
+                        }
+                    }
+                    else if (defence == 5)
+                    {
+                        if (buttonValue <= 4)
+                        {
+                            reactivateColor(button);
+                        }
+                    }
+                }
+                if (buttonType == "Magic")
+                {
+                    if (buttonValue <= magic)
+                    {
+                        reactivateButton(button);
+                    }
+                    else if (buttonValue == magic + 1)
+                    {
+                        button.tag = "Selectable";
+                        button.GetComponent<Button>().interactable = false;
+                    }
+
+                    if (magic == 4)
+                    {
+                        if (buttonValue == 3)
+                        {
+                            reactivateColor(button);
+                        }
+                    }
+                    else if (magic == 5)
+                    {
+                        if (buttonValue <= 4)
+                        {
+                            reactivateColor(button);
+                        }
+                    }
+                }
+            }
+
+            statsMenu.previousPopup = false;
+        }
+    }
+
+    private void reactivateColor(GameObject button)
+    {
+        cb = button.GetComponent<Button>().colors;
+        cb.disabledColor = disabled;
+        button.GetComponent<Button>().colors = cb;
+        button.GetComponent<Button>().interactable = false;
+    }
+
+    private void reactivateButton(GameObject button)
+    {
+        button.GetComponent<Image>().color = orange;
+        cb = button.GetComponent<Button>().colors;
+        cb.highlightedColor = white;
+        button.GetComponent<Button>().colors = cb;
+        button.tag = "Selected";
+        button.GetComponent<Button>().interactable = true;
+    }
+
+    private void buttonReset(GameObject button)
+    {
+        button.GetComponent<Image>().color = white;
+        cb = button.GetComponent<Button>().colors;
+        cb.disabledColor = working;
+        cb.highlightedColor = orange;
+        button.GetComponent<Button>().colors = cb;
+
+        if (button.name.Contains("3"))
+        {
+            button.tag = "Selectable";
+            button.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            button.tag = "Unselectable";
+            button.GetComponent<Button>().interactable = false;
         }
     }
 
@@ -62,8 +259,6 @@ public class StatsManager : MonoBehaviour
         var split = value.Split('-');
         var buttonType = split[0];
         var buttonValue = int.Parse(split[1]);
-
-        GameObject[] selected = allStats.Where(b => b.tag == "Selected").ToArray();
 
         if (stats < statsAvailable)
         {
