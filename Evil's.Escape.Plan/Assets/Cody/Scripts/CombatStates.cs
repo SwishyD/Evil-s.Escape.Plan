@@ -7,6 +7,8 @@ public class CombatStates : MonoBehaviour {
 
     public GameObject[] playerHealthbars;
     public GameObject[] enemyHealthbars;
+    public GameObject[] playerShieldbars;
+    public GameObject[] enemyShieldbars;
     public Text[] playerHealthText;
     public Text[] enemyHealthText;
     public Text[] playerNamesText;
@@ -125,12 +127,14 @@ public class CombatStates : MonoBehaviour {
             playerNamesText[i].text = players[i].name;
             playerHealthText[i].text = "" + players[i].health;
             playerHealthbars[i].GetComponent<Image>().fillAmount = players[i].health / players[i].maxHealth;
+            playerShieldbars[i].GetComponent<Image>().fillAmount = players[i].shieldAmount / players[i].maxHealth;
         }
         for (int i = 0; i < enemyHealthbars.Length; i++)
         {
             enemyNamesText[i].text = enemies[i].name;
             enemyHealthText[i].text = "" + enemies[i].health;
             enemyHealthbars[i].GetComponent<Image>().fillAmount = enemies[i].health / enemies[i].maxHealth;
+            enemyShieldbars[i].GetComponent<Image>().fillAmount = enemies[i].shieldAmount / enemies[i].maxHealth;
         }
     }
 

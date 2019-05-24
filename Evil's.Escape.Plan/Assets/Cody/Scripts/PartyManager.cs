@@ -61,4 +61,19 @@ public class PartyManager : MonoBehaviour {
         p3.magic = 3;
     }
 
+    public void CheckMaxHp()
+    {
+        if(p1.health > p1.maxHealth)
+        {
+            p1.health = p1.maxHealth;
+        }
+        if (p2.health > p2.maxHealth)
+        {
+            p2.health = p2.maxHealth;
+        }
+        if (p3.health > p3.maxHealth)
+        {
+            p3.health = p3.maxHealth;
+        }
+    }
 }
