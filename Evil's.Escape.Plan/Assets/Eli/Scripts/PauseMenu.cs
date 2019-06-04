@@ -23,7 +23,7 @@ public class PauseMenu : MonoBehaviour
     private int selectedTab = 0;
 
     public GameObject[] pauseObjects;
-    private bool isPaused;
+    private bool isPaused = false;
 
     [SerializeField]
     private GameObject gameMap;
@@ -32,15 +32,18 @@ public class PauseMenu : MonoBehaviour
     private Button resume;
     [SerializeField]
     private Button no;
-    private bool quitOpen;
-    private bool quitAxisInUse;
-    private bool axisInUse;
+    private bool quitOpen = false;
+    private bool quitAxisInUse = true;
+    private bool axisInUse = false;
+
+    private bool shortcutKey;
 
     void Start()
     {
         Time.timeScale = 1;
         pauseObjects = GameObject.FindGameObjectsWithTag("ShowOnPause");
         isPaused = false;
+        shortcutKey = true;
         hidePaused();
         gameMap.SetActive(false);
         popup.SetActive(false);
@@ -61,6 +64,7 @@ public class PauseMenu : MonoBehaviour
             {
                 Time.timeScale = 1;
                 isPaused = false;
+                shortcutKey = true;
                 hidePaused();
             }
         }
@@ -142,16 +146,24 @@ public class PauseMenu : MonoBehaviour
     
     public void hidePaused()
     {
+        if (!shortcutKey)
+        {
+            FindObjectOfType<AudioManager>().Play("Button Click");
+        }
+
         Time.timeScale = 1;
         isPaused = false;
         foreach (GameObject objs in pauseObjects)
         {
             objs.SetActive(false);
         }
+
+        shortcutKey = false;
     }
 
     public void settings()
     {
+        FindObjectOfType<AudioManager>().Play("Button Click");
         axisInUse = true;
         settingsPopup.SetActive(true);
         foreach (GameObject objs in pauseObjects)
@@ -164,6 +176,7 @@ public class PauseMenu : MonoBehaviour
 
     public void settingsCancel()
     {
+        FindObjectOfType<AudioManager>().Play("Button Click");
         axisInUse = false;
         settingsPopup.SetActive(false);
         foreach (GameObject objs in pauseObjects)
@@ -190,6 +203,7 @@ public class PauseMenu : MonoBehaviour
 
     public void menu()
     {
+        FindObjectOfType<AudioManager>().Play("Button Click");
         quitOpen = true;
 
         quitAxisInUse = false;
@@ -206,6 +220,7 @@ public class PauseMenu : MonoBehaviour
 
     public void quitting()
     {
+        FindObjectOfType<AudioManager>().Play("Button Click");
         quitOpen = true;
 
         quitAxisInUse = false;
@@ -222,8 +237,13 @@ public class PauseMenu : MonoBehaviour
 
     public void confirm()
     {
+        FindObjectOfType<AudioManager>().Play("Button Click");
         if (confirmRestart == 1)
         {
+            AudioManager.instance.CancelBackground();
+            AudioManager.instance.Background(false, true);
+            AudioManager.instance.Monster(0);
+            Time.timeScale = 1;
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
         }
         else if (confirmQuit == 1)
@@ -235,6 +255,7 @@ public class PauseMenu : MonoBehaviour
 
     public void cancel()
     {
+        FindObjectOfType<AudioManager>().Play("Button Click");
         quitOpen = false;
 
         quitAxisInUse = true;

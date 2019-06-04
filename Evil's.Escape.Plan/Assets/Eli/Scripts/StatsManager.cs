@@ -8,8 +8,8 @@ public class StatsManager : MonoBehaviour
     private GameObject[] allStats;
 
     private int statsAvailable = 3;
-    private int stats;
-    private bool selectable;
+    private int stats = 0;
+    private bool selectable = true;
 
     [SerializeField]
     private Text statsAvailableText;
@@ -39,7 +39,7 @@ public class StatsManager : MonoBehaviour
 
     void Start()
     {
-        orange = new Color32(248, 128, 0, 255);
+        orange = new Color32(250, 175, 7, 255);
         white = new Color32(255, 255, 255, 150);
         disabled = new Color32(200, 200, 200, 255);
         working = new Color32(200, 200, 200, 128);

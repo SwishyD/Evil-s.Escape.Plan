@@ -13,24 +13,24 @@ public class StatsMenu : MonoBehaviour
     [SerializeField]
     private Button orcThree;
 
-    private int currentOrc;
+    private int currentOrc = 1;
     public StatsManager statsManager;
 
     [HideInInspector]
-    public bool nextPopup;
+    public bool nextPopup = false;
     [HideInInspector]
-    public bool previousPopup;
+    public bool previousPopup = false;
     public Text nextText;
     [SerializeField]
     private Button previousButton;
     public Text previousText;
 
     [HideInInspector]
-    public int previousAttack;
+    public int previousAttack = 0;
     [HideInInspector]
-    public int previousDefence;
+    public int previousDefence = 0;
     [HideInInspector]
-    public int previousMagic;
+    public int previousMagic = 0;
 
     private ColorBlock cb;
     private Color selected;

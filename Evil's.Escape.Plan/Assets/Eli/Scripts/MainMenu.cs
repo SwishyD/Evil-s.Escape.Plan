@@ -13,7 +13,7 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField]
     private Button quit;
-    private bool isQuitting;
+    private bool isQuitting = true;
     private int confirmQuit = 0;
 
     [SerializeField]
@@ -27,9 +27,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField]
     private Button no;
     private bool statsOpen = false;
-    private bool quitOpen;
-    private bool quitAxisInUse;
-    private bool axisInUse;
+    private bool quitOpen = false;
+    private bool quitAxisInUse = true;
+    private bool axisInUse = false;
     
     public CanvasGroup stats;
     [SerializeField]
@@ -121,6 +121,7 @@ public class MainMenu : MonoBehaviour
 
     public void assignStats()
     {
+        AudioManager.instance.CancelMonster();
         FindObjectOfType<AudioManager>().Play("Button Click");
         statsOpen = true;
         stats.alpha = 1;
@@ -130,6 +131,8 @@ public class MainMenu : MonoBehaviour
     {
         if (statsMenu.loadingReady)
         {
+            AudioManager.instance.CancelBackground();
+            AudioManager.instance.Monster(1);
             stats.alpha = 0;
             FindObjectOfType<AudioManager>().Play("New Game");
             Invoke("Loading", 1f);
