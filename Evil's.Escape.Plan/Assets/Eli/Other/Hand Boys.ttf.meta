@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 9d779b31a443ef94c937af632a1420b7
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Hand Boys
+  fontNames:
+  - Hand Boys
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: bdd3ca2ff6303b148b0af58ec5fa1068, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
