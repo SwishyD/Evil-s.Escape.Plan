@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu instance;
+
     [SerializeField]
     private Button optionsButton;
     [SerializeField]
@@ -23,10 +25,8 @@ public class PauseMenu : MonoBehaviour
     private int selectedTab = 0;
 
     public GameObject[] pauseObjects;
-    private bool isPaused = false;
-
-    [SerializeField]
-    private GameObject gameMap;
+    [HideInInspector]
+    public bool isPaused = false;
 
     [SerializeField]
     private Button resume;
@@ -38,6 +38,17 @@ public class PauseMenu : MonoBehaviour
 
     private bool shortcutKey;
 
+    void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+    }
+
     void Start()
     {
         Time.timeScale = 1;
@@ -45,7 +56,6 @@ public class PauseMenu : MonoBehaviour
         isPaused = false;
         shortcutKey = true;
         hidePaused();
-        gameMap.SetActive(false);
         popup.SetActive(false);
         settingsPopup.SetActive(false);
     }
@@ -118,20 +128,6 @@ public class PauseMenu : MonoBehaviour
                 {
                     x.SetActive(true);
                 }
-            }
-        }
-
-        if ((Input.GetKeyDown(KeyCode.M)) && isPaused != true)
-        {
-            if (Time.timeScale == 1)
-            {
-                Time.timeScale = 0;
-                gameMap.SetActive(true);
-            }
-            else if (Time.timeScale == 0)
-            {
-                Time.timeScale = 1;
-                gameMap.SetActive(false);
             }
         }
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum Tiers
 {
@@ -44,254 +45,160 @@ public class MapPather : MonoBehaviour
     [SerializeField]
     private GameObject[] tierButtons;
     [SerializeField]
-    private Text thisText;
+    private Image thisImage;
 
     public void OnButtonClick()
     {
-        Debug.Log("Working");
-        switch (_to.tierNum)
+        if (!PauseMenu.instance.isPaused)
         {
-            case Tiers.Tier00:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 0");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                foreach (GameObject yellowOn in yellowPathsOn)
-                {
-                    IEnumerable<Image> images = yellowOn.GetComponentsInChildren<Image>();
-                    foreach (Image im in images)
+            Debug.Log("Working");
+            switch (_to.tierNum)
+            {
+                case Tiers.Tier00:
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 0");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
                     {
-                        im.color = new Color32(255, 226, 31, 255);
+                        nextButton.interactable = true;
                     }
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier01:
-                PauseTracker.roomCompletion++;
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 1");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image yellow in yellowPathsOff)
-                {
-                    var tempYellow = yellow.color;
-                    tempYellow.a = 0.5f;
-                    yellow.color = tempYellow;
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier02:
-                PauseTracker.roomCompletion++;
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 2");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image yellow in yellowPathsOff)
-                {
-                    var tempYellow = yellow.color;
-                    tempYellow.a = 0.5f;
-                    yellow.color = tempYellow;
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier03:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 3");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier04:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 4");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier05:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 5");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier06:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 6");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier07:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 7");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
-            case Tiers.Tier08:
-                tierButtons = GameObject.FindGameObjectsWithTag("Tier 8");
-                foreach (GameObject button in tierButtons)
-                {
-                    button.GetComponent<Button>().interactable = false;
-                }
-                /*foreach (GameObject lockImage in locks)
-                {
-                    lockImage.SetActive(false);
-                }
-                foreach (Image yellow in yellowPathsOn)
-                {
-                    yellow.color = new Color32(255, 226, 31, 255);
-                }
-                foreach (Image grey in greyPaths)
-                {
-                    grey.color = new Color32(64, 64, 64, 127);
-                }*/
-                foreach (Button nextButton in nextButtons)
-                {
-                    nextButton.interactable = true;
-                }
-                break;
+                    break;
+                case Tiers.Tier01:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 1");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier02:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 2");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier03:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 3");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier04:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 4");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier05:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 5");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier06:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 6");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier07:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 7");
+                    MapButtons();
+                    foreach (Button nextButton in nextButtons)
+                    {
+                        nextButton.interactable = true;
+                    }
+                    break;
+                case Tiers.Tier08:
+                    PauseTracker.roomCompletion++;
+                    tierButtons = GameObject.FindGameObjectsWithTag("Tier 8");
+                    MapButtons();
+                    break;
+            }
+        }
+    }
+
+    public void MapButtons()
+    {
+        foreach (GameObject button in tierButtons)
+        {
+            button.GetComponent<Button>().interactable = false;
+        }
+        foreach (GameObject yellowOn in yellowPathsOn)
+        {
+            foreach (Transform child in yellowOn.transform)
+            {
+                child.gameObject.GetComponent<Image>().color = new Color32(255, 226, 31, 255);
+            }
+            /*IEnumerable<Image> images = yellowOn.GetComponentsInChildren<Image>();
+            foreach (Image im in images)
+            {
+                im.color = new Color32(255, 226, 31, 255);
+            }*/
+        }
+        foreach (GameObject yellow in yellowPathsOff)
+        {
+            foreach (Transform child in yellow.transform)
+            {
+                var tempYellow = child.gameObject.GetComponent<Image>().color;
+                tempYellow.a = 0.5f;
+                child.gameObject.GetComponent<Image>().color = tempYellow;
+            }
+        }
+        foreach (GameObject grey in greyPaths)
+        {
+            foreach (Transform child in grey.transform)
+            {
+                child.gameObject.GetComponent<Image>().color = new Color32(64, 64, 64, 127);
+            }
         }
     }
 
     public void GenerateRoom()
     {
-        if (thisText.text.Equals("Battle"))
+        if (!PauseMenu.instance.isPaused)
         {
-            FindObjectOfType<AudioManager>().Play("Danger");
-        }
-        else if (thisText.text.Equals("Random"))
-        {
-            MapRandomize.instance.repickRoom(thisText);
+            if (thisImage.sprite == MapRandomize.instance.rooms[0])
+            {
+                Debug.Log("Battle Room is Loading");
+                //SceneManager.LoadScene("Battle");
+                FindObjectOfType<AudioManager>().Play("Danger");
+            }
+            else if (thisImage.sprite == MapRandomize.instance.rooms[1])
+            {
+                Debug.Log("Campfire Room is Loading");
+                //SceneManager.LoadScene("Campfire");
+            }
+            else if (thisImage.sprite == MapRandomize.instance.rooms[2])
+            {
+                Debug.Log("Treasure Room is Loading");
+                //SceneManager.LoadScene("Treasure");
+            }
+            else if (thisImage.sprite == MapRandomize.instance.rooms[3])
+            {
+                Debug.Log("Demon Room is Loading");
+                //SceneManager.LoadScene("Demon");
+            }
+            else if (thisImage.sprite == MapRandomize.instance.rooms[4])
+            {
+                MapRandomize.instance.repickRoom(thisImage);
+            }
         }
     }
 }
